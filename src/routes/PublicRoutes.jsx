@@ -20,4 +20,4 @@ export default function PublicRoutes() {
       </Route>
     </Routes>
   );
-}
+} 
