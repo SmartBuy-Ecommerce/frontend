@@ -1,8 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import { signup } from '../api/auth';
+import { EmailValidation } from '../api/auth';
 import { useNavigate } from 'react-router-dom';
+  import { debounce } from 'lodash';
 
 // Success Modal Component
 const SuccessModal = ({ onClose }) => (
@@ -40,7 +42,14 @@ const SuccessModal = ({ onClose }) => (
 );
 
 // Step 1 Component - Personal Information
-const PersonalInfoStep = ({ formData, errors, handleChange, handleNext }) => (
+const PersonalInfoStep = ({ 
+  formData, 
+  errors, 
+  handleChange, 
+  handleNext, 
+  handleEmailBlur,
+  isCheckingEmail 
+}) => (
   <>
     <div className="text-center mb-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-2">Create Account</h1>
@@ -68,16 +77,32 @@ const PersonalInfoStep = ({ formData, errors, handleChange, handleNext }) => (
         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
           Email
         </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          className={`w-full px-4 py-3 rounded-lg border ${errors.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'} focus:outline-none focus:ring-2 transition-colors`}
-          placeholder="your@email.com"
-        />
+        <div className="relative">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            onBlur={handleEmailBlur}
+            className={`w-full px-4 py-3 rounded-lg border ${
+              errors.email 
+                ? 'border-red-500 focus:ring-red-500' 
+                : 'border-gray-300 focus:ring-blue-500'
+            } ${isCheckingEmail ? 'pr-10' : ''} focus:outline-none focus:ring-2 transition-colors`}
+            placeholder="your@email.com"
+            disabled={isCheckingEmail}
+          />
+          {isCheckingEmail && (
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
+            </div>
+          )}
+        </div>
         {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+        {!errors.email && formData.email && !isCheckingEmail && (
+          <p className="mt-1 text-sm text-green-600">Email is available</p>
+        )}
       </div>
 
       <div className="mb-6">
@@ -226,20 +251,65 @@ const RegistrationForm = () => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const [showPassword, setShowPassword] = useState({ password: false, confirmPassword: false });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // Debounced email validation function
+  const validateEmail = useCallback(
+    debounce(async (email) => {
+      if (!email) return;
+      
+      // Basic email format validation first
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setErrors(prev => ({ ...prev, email: 'Please enter a valid email address' }));
+        return;
+      }
+      
+      setIsCheckingEmail(true);
+      try {
+        const result = await EmailValidation(email);
+        if (!result.available) {
+          setErrors(prev => ({ ...prev, email: 'Email is already registered' }));
+        } else {
+          setErrors(prev => ({ ...prev, email: '' }));
+        }
+      } catch (error) {
+        console.error('Email validation failed:', error);
+        // Don't show error to user if the validation API fails
+      } finally {
+        setIsCheckingEmail(false);
+      }
+    }, 500), // 500ms debounce delay
+    []
+  );
 
   // Handlers
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
 
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }));
+    // Clear email error when user starts typing again
+    if (name === 'email' && errors.email) {
+      setErrors(prev => ({ ...prev, email: '' }));
+    }
   }, [errors]);
+
+  const handleEmailBlur = (e) => {
+    validateEmail(e.target.value);
+  };
 
   const togglePasswordVisibility = useCallback((field) => {
     setShowPassword(prev => ({ ...prev, [field]: !prev[field] }));
   }, []);
+
+  // Cleanup debounce on component unmount
+  useEffect(() => {
+    return () => {
+      validateEmail.cancel();
+    };
+  }, [validateEmail]);
 
   // Validation
   const validatePart1 = () => {
@@ -249,6 +319,12 @@ const RegistrationForm = () => {
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
     if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
     else if (!/^\d{10,15}$/.test(formData.phoneNumber)) newErrors.phoneNumber = 'Invalid phone number (10-15 digits)';
+    
+    // Check if email validation has already flagged this email as taken
+    if (errors.email && errors.email.includes('already registered')) {
+      newErrors.email = errors.email;
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -297,7 +373,6 @@ const RegistrationForm = () => {
 
   const closeSuccessModal = () => {
     setShowSuccessModal(false);
-    // You can redirect to login page here if you want
     navigate('/login');
   };
 
@@ -316,6 +391,8 @@ const RegistrationForm = () => {
             errors={errors}
             handleChange={handleChange}
             handleNext={handleNext}
+            handleEmailBlur={handleEmailBlur}
+            isCheckingEmail={isCheckingEmail}
           />
         ) : (
           <PasswordStep

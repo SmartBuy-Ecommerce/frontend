@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { mockLogin, checkBackendConnection } from "../api/auth";
+import { login, checkBackendConnection } from "../api/auth";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -14,6 +14,8 @@ const LoginPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [shake, setShake] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     checkBackendConnection()
@@ -61,16 +63,16 @@ const LoginPage = () => {
 
     if (validate()) {
       setIsSubmitting(true);
-
+  setLoginError("");
+  setShowError(false);
       try {
-        // Call the mockLogin API function
-        const response = await mockLogin(formData.email, formData.password);
-        console.log("Login successful:", response);
-
-        // Redirect after successful "login"
+        // Call the login API function
+        await login(formData.email, formData.password);
+        // Redirect after successful login
         navigate("/dashboard");
       } catch (error) {
-        console.error("Login failed:", error);
+        setLoginError(error.message);
+        setShowError(true);
         setShake(true);
         setTimeout(() => setShake(false), 500);
       } finally {
@@ -98,7 +100,7 @@ const LoginPage = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} noValidate>
+  <form onSubmit={handleSubmit} noValidate>
           <div className="mb-6">
             <label
               htmlFor="email"
@@ -222,6 +224,26 @@ const LoginPage = () => {
               "Login"
             )}
           </button>
+          {showError && loginError && (
+            <div className="mt-4 flex justify-center">
+              <div className="relative bg-red-100 border border-red-400 text-red-700 px-6 py-3 rounded-lg shadow-md animate-fade-in w-full max-w-xs flex items-center">
+                <svg className="h-5 w-5 mr-2 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="flex-1">{loginError}</span>
+                <button
+                  type="button"
+                  className="absolute top-2 right-2 text-red-500 hover:text-red-700 focus:outline-none"
+                  onClick={() => setShowError(false)}
+                  aria-label="Close error message"
+                >
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
         </form>
 
         <div className="mt-6 text-center">

@@ -6,11 +6,32 @@ export const checkBackendConnection = async () => {
   return response.data; // { status: "OK" }
 };
 
-// Mock login (replace with real implementation later)
-export const mockLogin = async (email, password) => {
-  const response = await apiClient.post('/auth/login', { email, password });
-  return response.data; // { message: "Login successful (mock)" }
-};
+//  login
+export const login = async (email,password) => {
+  try {
+    const response = await apiClient.post('/auth/login', { email, password });
+    // If backend returns { token: "..." }, extract token
+    const token = response.data.token || response.data;
+    localStorage.setItem('authToken', token);
+    console.log(token);
+    return token;
+  } catch (error) {
+    // Show specific backend error for invalid credentials
+    let errorMsg = 'Login failed: ';
+    if (error.response) {
+      if (error.response.status === 401) {
+        errorMsg += error.response.data || 'Invalid email or password.';
+      } else if (error.response.data?.message) {
+        errorMsg += error.response.data.message;
+      } else {
+        errorMsg += error.response.data || error.message;
+      }
+    } else {
+      errorMsg += error.message;
+    }
+    throw new Error(errorMsg);
+  }
+}
 
 // User signup
 export const signup = async (userData) => {
@@ -24,6 +45,17 @@ export const signup = async (userData) => {
       data: error.response?.data,
       headers: error.response?.headers
     });
+    throw error;
+  }
+};
+
+// Email validation
+export const EmailValidation = async (email) => {
+  try {
+    const response = await apiClient.post('/auth/check-email', { email });
+    return response.data; // { isValid: true/false, message: "..." }
+  } catch (error) {
+    console.error('Email validation error:', error);
     throw error;
   }
 };
