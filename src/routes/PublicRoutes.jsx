@@ -1,23 +1,26 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "../pages/Home";
 import Shop from "../pages/Shop";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import ProductDetails from "../pages/ProductDetails";
-import Dashboard from "../pages/Dashboard";
+import NotFound from "../pages/NotFound"; // Import the 404 component
 import Layout from "../layouts/layout";
+import AdminProducts from "../pages/seller/Products"
 
 export default function PublicRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route path="/" element={<Home />} />
+        <Route index element={<Home />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/Dashboard" element={<Dashboard/>}/>
+        <Route path="/product/:id" element={<ProductDetails />}/>
+        <Route path="/seller/products" element={<AdminProducts />} /> {/*Fo testing porpose*/}
+        {/* Add a catch-all route for 404 errors */}
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );
-} 
+}

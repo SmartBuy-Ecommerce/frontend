@@ -1,11 +1,15 @@
 // src/components/Layout.jsx
 import Navbar from '../components/Navbar';
-import { Outlet } from 'react-router-dom';
+import { Outlet,useLocation } from 'react-router-dom';
 
 const Layout = () => {
+  const location = useLocation();
+
+  const noNavbarPaths = ['/login', '/register'];
+  const shouldShowNavbar = !noNavbarPaths.includes(location.pathname);
   return (
     <>
-      <Navbar />
+      {shouldShowNavbar && <Navbar /> }
       <div className="p-4">
         <Outlet />
       </div>

@@ -3,8 +3,10 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { login, checkBackendConnection } from "../api/auth";
+import { useAuth } from "../contexts/AuthContext";
 
 const LoginPage = () => {
+  const { login: setUserContext } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -68,6 +70,8 @@ const LoginPage = () => {
       try {
         // Call the login API function
         await login(formData.email, formData.password);
+        // Set user in AuthContext for protected routes
+        setUserContext({ email: formData.email });
         // Redirect after successful login
         navigate("/dashboard");
       } catch (error) {
