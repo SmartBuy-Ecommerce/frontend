@@ -11,6 +11,7 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    role: "",
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,7 +25,6 @@ const LoginPage = () => {
       .then((data) => console.log("Backend status: ", data))
       .catch(() => console.error("Backend not reachable"));
   }, []);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,20 +61,31 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (validate()) {
-      setIsSubmitting(true);
-  setLoginError("");
-  setShowError(false);
-      try {
-        // Call the login API function
-        await login(formData.email, formData.password);
-        // Set user in AuthContext for protected routes
-        setUserContext({ email: formData.email });
-        // Redirect after successful login
-        navigate("/dashboard");
-      } catch (error) {
+  if (validate()) {
+    setIsSubmitting(true);
+    setLoginError("");
+    setShowError(false);
+    try {
+      // Login and get both token and user data
+      const { user } = await login(formData.email, formData.password);
+      
+      // Set user in AuthContext with actual role from backend
+      setUserContext({ 
+        email: user.email, 
+        role: user.role 
+      });
+    
+      // Redirect based on actual role from backend
+        if (user.role === "BUYER") {
+          navigate("/dashboard");
+        } else if (user.role === "SELLER") {
+          navigate("/dashboard/seller/products");
+        } else if (user.role === "ADMIN") {
+          navigate("/dashboard/admin/dashboard");
+        }
+    } catch (error) {
         setLoginError(error.message);
         setShowError(true);
         setShake(true);
@@ -104,7 +115,7 @@ const LoginPage = () => {
           </p>
         </div>
 
-  <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit} noValidate>
           <div className="mb-6">
             <label
               htmlFor="email"
@@ -231,8 +242,18 @@ const LoginPage = () => {
           {showError && loginError && (
             <div className="mt-4 flex justify-center">
               <div className="relative bg-red-100 border border-red-400 text-red-700 px-6 py-3 rounded-lg shadow-md animate-fade-in w-full max-w-xs flex items-center">
-                <svg className="h-5 w-5 mr-2 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="h-5 w-5 mr-2 text-red-500 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 <span className="flex-1">{loginError}</span>
                 <button
@@ -241,8 +262,18 @@ const LoginPage = () => {
                   onClick={() => setShowError(false)}
                   aria-label="Close error message"
                 >
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>

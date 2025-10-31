@@ -7,14 +7,49 @@ export const checkBackendConnection = async () => {
 };
 
 //  login
-export const login = async (email,password) => {
+export const login = async (email, password) => {
   try {
     const response = await apiClient.post('/auth/login', { email, password });
-    // If backend returns { token: "..." }, extract token
+
     const token = response.data.token || response.data;
     localStorage.setItem('authToken', token);
-    console.log(token);
-    return token;
+
+    // Use user payload if backend sent it, otherwise decode token
+    let userData = response.data.user || {};
+
+    if (!userData || Object.keys(userData).length === 0) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join('')
+        );
+        userData = JSON.parse(jsonPayload) || {};
+      } catch {
+        userData = {};
+      }
+    }
+
+    const rawRole = userData.role
+      || (Array.isArray(userData.authorities) ? userData.authorities[0]?.authority : undefined)
+      || userData.scope
+      || '';
+
+    const normalizedRole = (rawRole || '')
+      .toString()
+      .toUpperCase()
+      .replace(/^ROLE_/, '');
+
+    const normalizedUser = {
+      ...userData,
+      role: normalizedRole,
+      email: userData.email || userData.sub || email,
+    };
+
+    return { token, user: normalizedUser };
   } catch (error) {
     // Show specific backend error for invalid credentials
     let errorMsg = 'Login failed: ';
@@ -49,6 +84,7 @@ export const signup = async (userData) => {
   }
 };
 
+
 // Email validation
 export const EmailValidation = async (email) => {
   try {
@@ -57,5 +93,14 @@ export const EmailValidation = async (email) => {
   } catch (error) {
     console.error('Email validation error:', error);
     throw error;
+  }
+};
+
+//logout
+export const logout = () => {
+  try {
+    localStorage.removeItem('authToken');
+  } catch (error) {
+    console.error('Logout error:', error);
   }
 };

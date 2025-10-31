@@ -1,10 +1,10 @@
-import { useState, useCallback, useEffect } from 'react';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
-import { signup } from '../api/auth';
-import { EmailValidation } from '../api/auth';
-import { useNavigate } from 'react-router-dom';
-  import { debounce } from 'lodash';
+import { useState, useCallback, useEffect } from "react";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
+import { signup } from "../api/auth";
+import { EmailValidation } from "../api/auth";
+import { useNavigate } from "react-router-dom";
+import { debounce } from "lodash";
 
 // Success Modal Component
 const SuccessModal = ({ onClose }) => (
@@ -42,13 +42,13 @@ const SuccessModal = ({ onClose }) => (
 );
 
 // Step 1 Component - Personal Information
-const PersonalInfoStep = ({ 
-  formData, 
-  errors, 
-  handleChange, 
-  handleNext, 
+const PersonalInfoStep = ({
+  formData,
+  errors,
+  handleChange,
+  handleNext,
   handleEmailBlur,
-  isCheckingEmail 
+  isCheckingEmail,
 }) => (
   <>
     <div className="text-center mb-8">
@@ -58,7 +58,35 @@ const PersonalInfoStep = ({
 
     <form onSubmit={handleNext}>
       <div className="mb-4">
-        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="role"
+          className="block text-sm font-medium text-gray-700 -mb-3"
+        >
+          Choose user Type
+        </label>
+        <br />
+        <select
+          name="role"
+          id="role"
+          className={`w-full px-4 py-3 rounded-lg border  ${
+            errors.role
+              ? "border-red-500 focus:ring-red-500"
+              : "border-gray-300 focus:ring-blue-500"
+          } focus:outline-none focus:ring-2 transition-colors`}
+           value={formData.role}
+           onChange={handleChange}
+        >
+          <option value="">Select Role</option>
+          <option value="BUYER">Buyer</option>
+          <option value="SELLER">Seller</option>
+        </select>
+        {errors.role && (
+          <p className="mt-1 text-sm text-red-600">{errors.role}</p>
+        )}
+        <label
+          htmlFor="fullName"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Full Name
         </label>
         <input
@@ -67,14 +95,23 @@ const PersonalInfoStep = ({
           name="fullName"
           value={formData.fullName}
           onChange={handleChange}
-          className={`w-full px-4 py-3 rounded-lg border ${errors.fullName ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'} focus:outline-none focus:ring-2 transition-colors`}
+          className={`w-full px-4 py-3 rounded-lg border ${
+            errors.fullName
+              ? "border-red-500 focus:ring-red-500"
+              : "border-gray-300 focus:ring-blue-500"
+          } focus:outline-none focus:ring-2 transition-colors`}
           placeholder="John Doe"
         />
-        {errors.fullName && <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>}
+        {errors.fullName && (
+          <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
+        )}
       </div>
 
       <div className="mb-4">
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Email
         </label>
         <div className="relative">
@@ -86,10 +123,12 @@ const PersonalInfoStep = ({
             onChange={handleChange}
             onBlur={handleEmailBlur}
             className={`w-full px-4 py-3 rounded-lg border ${
-              errors.email 
-                ? 'border-red-500 focus:ring-red-500' 
-                : 'border-gray-300 focus:ring-blue-500'
-            } ${isCheckingEmail ? 'pr-10' : ''} focus:outline-none focus:ring-2 transition-colors`}
+              errors.email
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-blue-500"
+            } ${
+              isCheckingEmail ? "pr-10" : ""
+            } focus:outline-none focus:ring-2 transition-colors`}
             placeholder="your@email.com"
             disabled={isCheckingEmail}
           />
@@ -99,14 +138,19 @@ const PersonalInfoStep = ({
             </div>
           )}
         </div>
-        {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+        {errors.email && (
+          <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+        )}
         {!errors.email && formData.email && !isCheckingEmail && (
           <p className="mt-1 text-sm text-green-600">Email is available</p>
         )}
       </div>
 
       <div className="mb-6">
-        <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="phoneNumber"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Phone Number
         </label>
         <input
@@ -115,10 +159,16 @@ const PersonalInfoStep = ({
           name="phoneNumber"
           value={formData.phoneNumber}
           onChange={handleChange}
-          className={`w-full px-4 py-3 rounded-lg border ${errors.phoneNumber ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'} focus:outline-none focus:ring-2 transition-colors`}
+          className={`w-full px-4 py-3 rounded-lg border ${
+            errors.phoneNumber
+              ? "border-red-500 focus:ring-red-500"
+              : "border-gray-300 focus:ring-blue-500"
+          } focus:outline-none focus:ring-2 transition-colors`}
           placeholder="1234567890"
         />
-        {errors.phoneNumber && <p className="mt-1 text-sm text-red-600">{errors.phoneNumber}</p>}
+        {errors.phoneNumber && (
+          <p className="mt-1 text-sm text-red-600">{errors.phoneNumber}</p>
+        )}
       </div>
 
       <button
@@ -131,8 +181,11 @@ const PersonalInfoStep = ({
 
     <div className="mt-6 text-center">
       <p className="text-sm text-gray-600">
-        Already have an account?{' '}
-        <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+        Already have an account?{" "}
+        <Link
+          to="/login"
+          className="font-medium text-blue-600 hover:text-blue-500"
+        >
           Login
         </Link>
       </p>
@@ -149,7 +202,7 @@ const PasswordStep = ({
   showPassword,
   togglePasswordVisibility,
   handleBack,
-  isSubmitting
+  isSubmitting,
 }) => (
   <>
     <div className="text-center mb-8">
@@ -159,53 +212,79 @@ const PasswordStep = ({
 
     <form onSubmit={handleSubmit}>
       <div className="mb-4">
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Password
         </label>
         <div className="relative">
           <input
-            type={showPassword.password ? 'text' : 'password'}
+            type={showPassword.password ? "text" : "password"}
             id="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className={`w-full px-4 py-3 rounded-lg border ${errors.password ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'} focus:outline-none focus:ring-2 transition-colors pr-12`}
+            className={`w-full px-4 py-3 rounded-lg border ${
+              errors.password
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-blue-500"
+            } focus:outline-none focus:ring-2 transition-colors pr-12`}
             placeholder="••••••••"
           />
           <button
             type="button"
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-            onClick={() => togglePasswordVisibility('password')}
+            onClick={() => togglePasswordVisibility("password")}
           >
-            {showPassword.password ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+            {showPassword.password ? (
+              <EyeSlashIcon className="h-5 w-5" />
+            ) : (
+              <EyeIcon className="h-5 w-5" />
+            )}
           </button>
         </div>
-        {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+        {errors.password && (
+          <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+        )}
       </div>
 
       <div className="mb-6">
-        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="confirmPassword"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Confirm Password
         </label>
         <div className="relative">
           <input
-            type={showPassword.confirmPassword ? 'text' : 'password'}
+            type={showPassword.confirmPassword ? "text" : "password"}
             id="confirmPassword"
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
-            className={`w-full px-4 py-3 rounded-lg border ${errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'} focus:outline-none focus:ring-2 transition-colors pr-12`}
+            className={`w-full px-4 py-3 rounded-lg border ${
+              errors.confirmPassword
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-blue-500"
+            } focus:outline-none focus:ring-2 transition-colors pr-12`}
             placeholder="••••••••"
           />
           <button
             type="button"
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-            onClick={() => togglePasswordVisibility('confirmPassword')}
+            onClick={() => togglePasswordVisibility("confirmPassword")}
           >
-            {showPassword.confirmPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+            {showPassword.confirmPassword ? (
+              <EyeSlashIcon className="h-5 w-5" />
+            ) : (
+              <EyeIcon className="h-5 w-5" />
+            )}
           </button>
         </div>
-        {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
+        {errors.confirmPassword && (
+          <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
+        )}
       </div>
 
       <div className="flex gap-4">
@@ -219,18 +298,36 @@ const PasswordStep = ({
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`flex-1 py-3 px-4 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
+          className={`flex-1 py-3 px-4 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center ${
+            isSubmitting ? "opacity-75 cursor-not-allowed" : ""
+          }`}
         >
           {isSubmitting ? (
             <>
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               Creating...
             </>
           ) : (
-            'Sign Up'
+            "Sign Up"
           )}
         </button>
       </div>
@@ -243,40 +340,50 @@ const RegistrationForm = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    password: '',
-    confirmPassword: ''
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    confirmPassword: "",
+    role: "",
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
-  const [showPassword, setShowPassword] = useState({ password: false, confirmPassword: false });
+  const [showPassword, setShowPassword] = useState({
+    password: false,
+    confirmPassword: false,
+  });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // Debounced email validation function
   const validateEmail = useCallback(
     debounce(async (email) => {
       if (!email) return;
-      
+
       // Basic email format validation first
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        setErrors(prev => ({ ...prev, email: 'Please enter a valid email address' }));
+        setErrors((prev) => ({
+          ...prev,
+          email: "Please enter a valid email address",
+        }));
         return;
       }
-      
+
       setIsCheckingEmail(true);
       try {
         const result = await EmailValidation(email);
         if (!result.available) {
-          setErrors(prev => ({ ...prev, email: 'Email is already registered' }));
+          setErrors((prev) => ({
+            ...prev,
+            email: "Email is already registered",
+          }));
         } else {
-          setErrors(prev => ({ ...prev, email: '' }));
+          setErrors((prev) => ({ ...prev, email: "" }));
         }
       } catch (error) {
-        console.error('Email validation failed:', error);
+        console.error("Email validation failed:", error);
         // Don't show error to user if the validation API fails
       } finally {
         setIsCheckingEmail(false);
@@ -286,22 +393,25 @@ const RegistrationForm = () => {
   );
 
   // Handlers
-  const handleChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const handleChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear email error when user starts typing again
-    if (name === 'email' && errors.email) {
-      setErrors(prev => ({ ...prev, email: '' }));
-    }
-  }, [errors]);
+      // Clear email error when user starts typing again
+      if (name === "email" && errors.email) {
+        setErrors((prev) => ({ ...prev, email: "" }));
+      }
+    },
+    [errors]
+  );
 
   const handleEmailBlur = (e) => {
     validateEmail(e.target.value);
   };
 
   const togglePasswordVisibility = useCallback((field) => {
-    setShowPassword(prev => ({ ...prev, [field]: !prev[field] }));
+    setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
   }, []);
 
   // Cleanup debounce on component unmount
@@ -314,26 +424,32 @@ const RegistrationForm = () => {
   // Validation
   const validatePart1 = () => {
     const newErrors = {};
-    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
-    if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required';
-    else if (!/^\d{10,15}$/.test(formData.phoneNumber)) newErrors.phoneNumber = 'Invalid phone number (10-15 digits)';
-    
+    if (!formData.role) newErrors.role = "Please select a role";
+    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Email is invalid";
+    if (!formData.phoneNumber)
+      newErrors.phoneNumber = "Phone number is required";
+    else if (!/^\d{10,15}$/.test(formData.phoneNumber))
+      newErrors.phoneNumber = "Invalid phone number (10-15 digits)";
+
     // Check if email validation has already flagged this email as taken
-    if (errors.email && errors.email.includes('already registered')) {
+    if (errors.email && errors.email.includes("already registered")) {
       newErrors.email = errors.email;
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const validatePart2 = () => {
     const newErrors = {};
-    if (!formData.password) newErrors.password = 'Password is required';
-    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
+    if (!formData.password) newErrors.password = "Password is required";
+    else if (formData.password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
+    if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -357,14 +473,17 @@ const RegistrationForm = () => {
         email: formData.email,
         phone: formData.phoneNumber,
         password: formData.password,
-        role: "BUYER"
+        role: formData.role,
       });
       console.log("✅ Registration successful:", data);
       setShowSuccessModal(true);
     } catch (error) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        formError: error.response?.data?.message || error.message || 'Signup failed. Please try again.'
+        formError:
+          error.response?.data?.message ||
+          error.message ||
+          "Signup failed. Please try again.",
       }));
     } finally {
       setIsSubmitting(false);
@@ -373,7 +492,7 @@ const RegistrationForm = () => {
 
   const closeSuccessModal = () => {
     setShowSuccessModal(false);
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -384,7 +503,7 @@ const RegistrationForm = () => {
             {errors.formError}
           </div>
         )}
-        
+
         {step === 1 ? (
           <PersonalInfoStep
             formData={formData}

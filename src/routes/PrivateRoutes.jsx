@@ -1,21 +1,25 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import Dashboard from '../pages/Dashboard';
-import NotFound from '../pages/NotFound'; // Import the 404 component
-
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import Dashboard from "../pages/Dashboard";
+import AdminProducts from "../pages/seller/Products";
+import AdminDashboard from "../pages/Admin/AdminDashboard";
+import NotFound from "../pages/NotFound";
+import Layout from "../layouts/layout";
 export default function PrivateRoutes() {
   const { user } = useAuth();
 
   return (
     <Routes>
       {user ? (
-        <>
-          <Route path="/dashboard" element={<Dashboard />} />
-          {/* Add a catch-all route for 404 errors in private routes */}
+        <Route element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="seller/products" element={<AdminProducts />} />
+          <Route path="admin/dashboard" element={<AdminDashboard />} />
           <Route path="*" element={<NotFound />} />
-        </>
+        </Route>
       ) : (
-        <Route path="*" element={<Navigate to="/login" />} />
+        /* If not authenticated, any private route should go to login */
+        <Route path="*" element={<Navigate to="/login" replace />} />
       )}
     </Routes>
   );

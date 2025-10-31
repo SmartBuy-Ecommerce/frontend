@@ -6,7 +6,7 @@ import Register from "../pages/Register";
 import ProductDetails from "../pages/ProductDetails";
 import NotFound from "../pages/NotFound"; // Import the 404 component
 import Layout from "../layouts/layout";
-import AdminProducts from "../pages/seller/Products"
+
 
 export default function PublicRoutes() {
   return (
@@ -17,7 +17,6 @@ export default function PublicRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/product/:id" element={<ProductDetails />}/>
-        <Route path="/seller/products" element={<AdminProducts />} /> {/*Fo testing porpose*/}
         {/* Add a catch-all route for 404 errors */}
         <Route path="*" element={<NotFound />} />
       </Route>
