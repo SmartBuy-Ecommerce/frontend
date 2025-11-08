@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { fetchBuyerProducts } from "../api/buyer/products";
 
-const Dashboard = () => {
+const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -114,7 +114,7 @@ const Dashboard = () => {
                         </h3>
                         {/* Fixed: Access category.name instead of category object */}
                         <p className="text-gray-600 mt-1">
-                          {product.category?.name || "Uncategorized"}
+                          {product.category || "Uncategorized"}
                         </p>
                         <p className="text-gray-600 mt-1">
                           {product.quantity || "No quantity"}
@@ -146,4 +146,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Products;

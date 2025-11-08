@@ -100,6 +100,7 @@ export const EmailValidation = async (email) => {
 export const logout = () => {
   try {
     localStorage.removeItem('authToken');
+    console.log("Redirect to Home page")
   } catch (error) {
     console.error('Logout error:', error);
   }

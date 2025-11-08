@@ -1,10 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import Dashboard from "../pages/Dashboard";
-import AdminProducts from "../pages/seller/Products";
+import SellerProducts from "../pages/seller/Products";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
+import Orders from "../pages/Admin/Orders";
 import NotFound from "../pages/NotFound";
 import Layout from "../layouts/layout";
+import Products from "../pages/Products";
 export default function PrivateRoutes() {
   const { user } = useAuth();
 
@@ -12,9 +13,10 @@ export default function PrivateRoutes() {
     <Routes>
       {user ? (
         <Route element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="seller/products" element={<AdminProducts />} />
+          <Route index element={<Products/>}/>
+          <Route path="seller/products" element={<SellerProducts />} />
           <Route path="admin/dashboard" element={<AdminDashboard />} />
+          <Route path="admin/orders" element={<Orders />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       ) : (

@@ -32,7 +32,7 @@ export const updateProduct = async (id, productData) => {
   } catch (error) {
     console.error('Error updating product:', error);
     throw error;
-  }
+  }   
 };
 
 // Delete a product

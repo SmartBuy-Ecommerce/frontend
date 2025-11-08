@@ -1,36 +1,78 @@
-// src/components/Navbar.jsx
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { logout as authLogout } from '../api/auth';
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { logout as authLogout } from "../api/auth";
+import { useEffect } from "react";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  
+
   const handleLogout = () => {
-    authLogout(); // Remove auth token
-    logout(); // Clear user from context
-    navigate('/login'); // Redirect to login
-  };
+  authLogout();
+  logout();
+  setTimeout(() => navigate("/"), 0); // defer navigation to next tick
+}
+
+  useEffect(() => {
+    if (!user) navigate("/");
+  }, [user, navigate]);
 
   return (
     <nav className="bg-gray-100 p-4 text-black flex gap-50">
-      <h1 className='font-bold text-4xl'>ShopMind</h1>
+      <h1 className="font-bold text-4xl">ShopMind</h1>
       <ul className="flex gap-20 justify-center items-center">
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/aboutus">About</Link></li>
-        <li><Link to="/contactUs">Contact</Link></li>
+        {user?.role ? (
+          <li>
+            {(() => {
+              switch (user.role) {
+                case "SELLER":
+                  return <Link to="/dashboard/seller/products">Home</Link>;
+                case "ADMIN":
+                  return <Link to="/dashboard/admin/dashboard">Home</Link>;
+                default:
+                  return <Link to="/">Home</Link>;
+              }
+            })()}
+          </li>
+        ) : (
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+        )}
+
+        {user?.role ==="BUYER" ? (
+          <li>
+            <Link to="/dashboard">Products</Link>
+          </li>
+        ) : (null)}
+        {user?.role === "ADMIN" ? null : (
+          <li>
+            <Link to="/aboutus">About</Link>
+          </li>
+        )}
+        {user?.role === "ADMIN" ? (
+          <li>
+            <Link to="/dashboard/admin/orders">Orders</Link>
+          </li>
+        ) : (
+          <li>
+            <Link to="/contactUs">Contact</Link>
+          </li>
+        )}
+
+
       </ul>
+
       {user ? (
-        <button 
+        <button
           onClick={handleLogout}
-          className='bg-black text-white text-xl w-30 rounded-2xl ml-96 px-4 py-2'
+          className="bg-black text-white text-xl w-30 rounded-2xl ml-96 px-4 py-2"
         >
           Logout
         </button>
       ) : (
         <Link to="/login">
-          <button className='bg-black text-white text-xl w-30 rounded-2xl ml-96 px-4 py-2'>
+          <button className="bg-black text-white text-xl w-30 rounded-2xl ml-96 px-4 py-2">
             Login
           </button>
         </Link>

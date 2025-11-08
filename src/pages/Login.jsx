@@ -79,7 +79,7 @@ const LoginPage = () => {
     
       // Redirect based on actual role from backend
         if (user.role === "BUYER") {
-          navigate("/dashboard");
+          navigate("/");
         } else if (user.role === "SELLER") {
           navigate("/dashboard/seller/products");
         } else if (user.role === "ADMIN") {

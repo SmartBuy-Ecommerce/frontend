@@ -280,7 +280,7 @@ const ProductsPage = () => {
                     </h3>
                     {/* Fixed: Access category.name instead of category object */}
                     <p className="text-gray-600 mt-1">
-                      {product.category?.name || "Uncategorized"}
+                      {product.category|| "Uncategorized"}
                     </p>
                     <p className="text-gray-600 mt-1">
                       {product.quantity || "No quantity"}
