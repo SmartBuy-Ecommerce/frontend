@@ -18,8 +18,8 @@ const Navbar = () => {
       <h1 className='font-bold text-4xl'>ShopMind</h1>
       <ul className="flex gap-20 justify-center items-center">
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/about">About</Link></li>
-        <li><Link to="/contact">Contact</Link></li>
+        <li><Link to="/aboutus">About</Link></li>
+        <li><Link to="/contactUs">Contact</Link></li>
       </ul>
       {user ? (
         <button 

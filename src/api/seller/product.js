@@ -27,7 +27,7 @@ export const createProduct = async (productData) => {
 // Update an existing product
 export const updateProduct = async (id, productData) => {
   try {
-    const response = await apiClient.patch(`/product/updateProduct/${id}`, productData);
+    const response = await apiClient.put(`/product/updateProduct?id=${id}`, productData);
     return response.data;
   } catch (error) {
     console.error('Error updating product:', error);
@@ -38,7 +38,7 @@ export const updateProduct = async (id, productData) => {
 // Delete a product
 export const deleteProduct = async (id) => {
   try {
-    const response = await apiClient.delete(`/product/deleteProduct/${id}`);
+    const response = await apiClient.delete(`/product/deleteProduct?id=${id}`);
     return response.data;
   } catch (error) {
     console.error('Error deleting product:', error);

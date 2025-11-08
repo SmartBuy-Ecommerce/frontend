@@ -20,7 +20,7 @@ const ProductsPage = () => {
     name: "",
     price: "",
     category: "",
-    description:"",
+    description: "",
     quantity: "",
   });
 
@@ -65,11 +65,17 @@ const ProductsPage = () => {
         description: formData.description,
         quantity: parseInt(formData.quantity) || 0,
       };
-    // console.log(productData);
+      // console.log(productData);
       const newProduct = await createProduct(productData);
       setProducts([...products, newProduct]);
       setShowAddModal(false);
-      setFormData({ name: "", price: "", description:"",category: "",quantity: "" });
+      setFormData({
+        name: "",
+        price: "",
+        description: "",
+        category: "",
+        quantity: "",
+      });
       setError(null);
       // console.log(newProduct);
     } catch (err) {
@@ -82,11 +88,13 @@ const ProductsPage = () => {
   const handleEditClick = (product) => {
     setCurrentProduct(product);
     setFormData({
-      name: product.name,
-      price: product.price,
-      description: product.description,
-      category: product.category,
-      quantity: product.quantity || "",
+      // Provide safe fallbacks so inputs remain controlled
+      name: product.name ?? "",
+      price: product.price ?? "",
+      description: product.description ?? "",
+      // category can be object ({name}) or a string
+      category: (product.category && (product.category.name || product.category)) || "",
+      quantity: product.quantity ?? "",
     });
     setShowEditModal(true);
   };
@@ -103,18 +111,23 @@ const ProductsPage = () => {
         quantity: parseInt(formData.quantity) || 0,
       };
 
-      const updatedProduct = await updateProduct(
-        currentProduct.id,
-        productData
-      );
+      const productId = currentProduct?.id || currentProduct?._id || currentProduct?.productId;
+      console.log("Updating product id:", productId, "payload:", productData);
+      const updatedProduct = await updateProduct(productId, productData);
       const updatedProducts = products.map((product) =>
-        product.id === currentProduct.id ? updatedProduct : product
+        (product.id === productId || product._id === productId || product.productId === productId) ? updatedProduct : product
       );
 
       setProducts(updatedProducts);
       setShowEditModal(false);
       setCurrentProduct(null);
-      setFormData({ name: "", price: "",description:"" ,category: "", quantity: ""});
+      setFormData({
+        name: "",
+        price: "",
+        description: "",
+        category: "",
+        quantity: "",
+      });
       setError(null);
     } catch (err) {
       console.error("Error updating product:", err);
@@ -122,18 +135,36 @@ const ProductsPage = () => {
     }
   };
 
-  // Delete a product
+  // Delete a product - UPDATED VERSION
   const handleDeleteProduct = async (id) => {
     try {
-      await deleteProduct(id);
-      const updatedProducts = products.filter((product) => product.id !== id);
-      setProducts(updatedProducts);
+      const productId = id ?? null;
+      // allow falsy numeric ids like 0; only reject if null/undefined
+      if (productId == null) {
+        throw new Error("No product id provided for deletion");
+      }
+      console.log("Deleting product id:", productId);
+      await deleteProduct(productId);
+        // Remove deleted product from UI: match `id`, `_id` and `productId` variants
+        setProducts(
+          products.filter(
+            (product) => product.id !== productId && product._id !== productId && product.productId !== productId
+          )
+        );
       setDeleteConfirm(null);
       setError(null);
     } catch (err) {
       console.error("Error deleting product:", err);
       setError("Failed to delete product. Please try again.");
     }
+  };
+
+  // Add this function to handle the delete confirmation click
+  const handleDeleteClick = (product) => {
+  // Normalize id field (some APIs return `_id`, `productId` or `id`)
+  const id = product.id || product._id || product.productId;
+    console.log("Delete click - product:", product, "id:", id);
+    setDeleteConfirm(id);
   };
 
   // Loading state
@@ -236,9 +267,9 @@ const ProductsPage = () => {
         {/* Products Grid */}
         {/* Products Grid - Fixed */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product,index) => (
+          {products.map((product, index) => (
             <div
-              key={index}
+              key={product.id || product._id || product.productId || index}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
               <div className="p-6">
@@ -252,7 +283,7 @@ const ProductsPage = () => {
                       {product.category?.name || "Uncategorized"}
                     </p>
                     <p className="text-gray-600 mt-1">
-                      {product.quantity  || "No quantity"}
+                      {product.quantity || "No quantity"}
                     </p>
                   </div>
                   <span
@@ -277,7 +308,7 @@ const ProductsPage = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => setDeleteConfirm(product.id)}
+                      onClick={() => handleDeleteClick(product)}
                       className="text-red-600 hover:text-red-800 font-medium py-1 px-3 rounded-md transition-colors"
                     >
                       Delete
@@ -514,8 +545,8 @@ const ProductsPage = () => {
           </div>
         )}
 
-        {/* Delete Confirmation Modal */}
-        {deleteConfirm && (
+  {/* Delete Confirmation Modal */}
+  {deleteConfirm != null && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
               <h2 className="text-xl font-bold text-gray-800 mb-4">
