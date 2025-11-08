@@ -104,35 +104,122 @@ const Products = () => {
               {products.map((product, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:translate-y-[-4px]"
                 >
-                  <div className="p-6">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-800">
-                          {product.name}
-                        </h3>
-                        {/* Fixed: Access category.name instead of category object */}
-                        <p className="text-gray-600 mt-1">
-                          {product.category || "Uncategorized"}
-                        </p>
-                        <p className="text-gray-600 mt-1">
-                          {product.quantity || "No quantity"}
-                        </p>
+                  {/* Enhanced Image Section */}
+                  <div className="relative h-48 w-full overflow-hidden bg-gray-100">
+                    {product.imageUrl ? (
+                      <>
+                        <img
+                          src={product.imageUrl}
+                          alt={product.name}
+                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                          loading="lazy"
+                          onError={(e) => {
+                            // Hide broken image and show placeholder
+                            e.target.style.display = "none";
+                          }}
+                        />
+                        {/* Fallback shown via CSS when image fails */}
+                        <div className="absolute inset-0 flex items-center justify-center bg-gray-200 hidden">
+                          <div className="text-center">
+                            <svg
+                              className="w-10 h-10 text-gray-400 mx-auto mb-2"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                              />
+                            </svg>
+                            <span className="text-xs text-gray-500">
+                              Image not available
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                        <div className="text-center">
+                          <svg
+                            className="w-12 h-12 text-gray-400 mx-auto mb-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                          </svg>
+                          <span className="text-sm text-gray-500">
+                            No image
+                          </span>
+                        </div>
                       </div>
+                    )}
+
+                    {/* Stock Status Badge on Image */}
+                    <div className="absolute top-3 right-3">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        className={`px-2 py-1 rounded-full text-xs font-bold backdrop-blur-sm ${
                           product.quantity > 5
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
+                            ? "bg-green-500/90 text-white"
+                            : product.quantity > 0
+                            ? "bg-yellow-500/90 text-white"
+                            : "bg-red-500/90 text-white"
                         }`}
                       >
-                        {product.quantity} in stock
+                        {product.quantity > 0
+                          ? `${product.quantity} left`
+                          : "Sold out"}
                       </span>
                     </div>
-                    <div className="mt-4 flex justify-between items-center">
-                      <span className="text-2xl font-bold text-blue-600">
-                        ${product.price.toFixed(2)}
+                  </div>
+
+                  {/* Product Details */}
+                  <div className="p-5">
+                    <div className="mb-3">
+                      <h3 className="text-lg font-semibold text-gray-800 line-clamp-2 mb-1">
+                        {product.name}
+                      </h3>
+                      <div className="flex items-center justify-between">
+                        <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                          {product.category || "Uncategorized"}
+                        </span>
+                        <span className="text-2xl font-bold text-gray-900">
+                          ${product.price ? product.price.toFixed(2) : "0.00"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {product.description && (
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                        {product.description}
+                      </p>
+                    )}
+
+                    <div className="flex justify-between items-center pt-3 border-t border-gray-100">
+                      <span
+                        className={`text-sm font-medium ${
+                          product.quantity > 5
+                            ? "text-green-600"
+                            : product.quantity > 0
+                            ? "text-yellow-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {product.quantity > 5
+                          ? "In Stock"
+                          : product.quantity > 0
+                          ? "Low Stock"
+                          : "Out of Stock"}
                       </span>
                     </div>
                   </div>
