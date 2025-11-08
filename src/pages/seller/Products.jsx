@@ -526,7 +526,22 @@ const ProductsPage = () => {
                         <p className="text-xs text-gray-500 mt-1">
                           Supported formats: JPG, PNG, GIF
                         </p>
-                      </div>                      
+                      </div>
+                      
+                      {/* Or Image URL */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Or enter image URL
+                        </label>
+                        <input
+                          type="url"
+                          name="imageUrl"
+                          value={formData.imageUrl}
+                          onChange={handleImageUrlChange}
+                          placeholder="https://example.com/image.jpg"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
                     </div>
 
                   </div>
