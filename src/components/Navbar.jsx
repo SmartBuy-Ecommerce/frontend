@@ -1,24 +1,27 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useCart } from "../contexts/CartContext";
 import { logout as authLogout } from "../api/auth";
 import { useEffect } from "react";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { cartCount } = useCart();
 
   const handleLogout = () => {
-  authLogout();
-  logout();
-  setTimeout(() => navigate("/"), 0); // defer navigation to next tick
-}
+    authLogout();
+    logout();
+    setTimeout(() => navigate("/"), 0); // defer navigation to next tick
+  };
 
   useEffect(() => {
     if (!user) navigate("/");
   }, [user, navigate]);
 
   return (
-    <nav className="bg-gray-100 p-4 text-black flex gap-50">
+    <nav className="bg-gray-100 p-4 text-black flex gap-30">
       <h1 className="font-bold text-4xl">ShopMind</h1>
       <ul className="flex gap-20 justify-center items-center">
         {user?.role ? (
@@ -40,11 +43,11 @@ const Navbar = () => {
           </li>
         )}
 
-        {user?.role ==="BUYER" ? (
+        {user?.role === "BUYER" ? (
           <li>
             <Link to="/dashboard">Products</Link>
           </li>
-        ) : (null)}
+        ) : null}
         {user?.role === "ADMIN" ? null : (
           <li>
             <Link to="/aboutus">About</Link>
@@ -60,7 +63,22 @@ const Navbar = () => {
           </li>
         )}
 
+        {user?.role === "BUYER" ? (
+          <li>
+            <Link to="/dashboard/cart">
+              {" "}
+              <div className="relative inline-block">
+                <FontAwesomeIcon icon={faShoppingCart} size="lg" />
 
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-3 bg-red-600 text-white text-xs px-1 py-0 rounded-full">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
+            </Link>
+          </li>
+        ) : null}
       </ul>
 
       {user ? (

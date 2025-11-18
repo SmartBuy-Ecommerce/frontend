@@ -62,7 +62,7 @@ const AboutUs = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 text-white py-20">
+      <section className="relative bg-gradient-to-br from-black via-gray-600 to-white text-white py-20">
         <div className="absolute inset-0 bg-black opacity-20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
@@ -116,12 +116,12 @@ const AboutUs = () => {
                 that enhance their lives.
               </p>
               <div className="flex flex-wrap gap-4">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105">
+                <button className="bg-black hover:bg-gray-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105">
                   <Link to="/">Shop Now</Link>
                 </button>
-                <button className="border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-3 rounded-full font-semibold transition-all duration-300">
+                <button className="border-2 border-gray-300 hover:border-black text-gray-700 hover:text-black px-8 py-3 rounded-full font-semibold transition-all duration-300">
                   Learn More
-                </button>
+                </button> 
               </div>
             </div>
             <div className="relative">

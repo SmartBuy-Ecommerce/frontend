@@ -6,6 +6,7 @@ import Orders from "../pages/Admin/Orders";
 import NotFound from "../pages/NotFound";
 import Layout from "../layouts/layout";
 import Products from "../pages/Products";
+import Cart from "../pages/Cart";
 export default function PrivateRoutes() {
   const { user } = useAuth();
 
@@ -14,6 +15,7 @@ export default function PrivateRoutes() {
       {user ? (
         <Route element={<Layout />}>
           <Route index element={<Products/>}/>
+          <Route path="cart" element={<Cart/>}/>
           <Route path="seller/products" element={<SellerProducts />} />
           <Route path="admin/dashboard" element={<AdminDashboard />} />
           <Route path="admin/orders" element={<Orders />} />

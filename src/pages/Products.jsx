@@ -1,11 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { fetchBuyerProducts } from "../api/buyer/products";
+import { useCart } from "../contexts/CartContext";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { addToCart } = useCart();
 
   const loadProducts = async () => {
     try {
@@ -121,7 +123,7 @@ const Products = () => {
                           }}
                         />
                         {/* Fallback shown via CSS when image fails */}
-                        <div className="absolute inset-0 flex items-center justify-center bg-gray-200 hidden">
+                        <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
                           <div className="text-center">
                             <svg
                               className="w-10 h-10 text-gray-400 mx-auto mb-2"
@@ -170,7 +172,7 @@ const Products = () => {
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-bold backdrop-blur-sm ${
                           product.quantity > 5
-                            ? "bg-green-500/90 text-white"
+                            ? "bg-black text-white"
                             : product.quantity > 0
                             ? "bg-yellow-500/90 text-white"
                             : "bg-red-500/90 text-white"
@@ -190,7 +192,7 @@ const Products = () => {
                         {product.name}
                       </h3>
                       <div className="flex items-center justify-between">
-                        <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                        <span className="inline-block bg-gray-400 text-white text-xs px-2 py-1 rounded">
                           {product.category || "Uncategorized"}
                         </span>
                         <span className="text-2xl font-bold text-gray-900">
@@ -209,7 +211,7 @@ const Products = () => {
                       <span
                         className={`text-sm font-medium ${
                           product.quantity > 5
-                            ? "text-green-600"
+                            ? "text-black"
                             : product.quantity > 0
                             ? "text-yellow-600"
                             : "text-red-600"
@@ -221,6 +223,12 @@ const Products = () => {
                           ? "Low Stock"
                           : "Out of Stock"}
                       </span>
+                      <button
+                        onClick={addToCart}
+                        className="bg-black text-white w-30 h-10 border rounded-2xl cursor-pointer transition duration-300 transform hover:scale-105 hover:bg-white hover:border-black hover:text-black "
+                      >
+                        Add to Cart
+                      </button>{" "}
                     </div>
                   </div>
                 </div>
