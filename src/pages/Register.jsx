@@ -8,7 +8,7 @@ import { debounce } from "lodash";
 
 // Success Modal Component
 const SuccessModal = ({ onClose }) => (
-  <div className="fixed inset-0 backdrop-blur-sm bg-purple-100/30 flex items-center justify-center z-50 p-4">
+  <div className="fixed inset-0 backdrop-blur-sm bg-gray-900/30 flex items-center justify-center z-50 p-4">
     <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full animate-fade-in">
       <div className="text-center">
         <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
@@ -32,7 +32,7 @@ const SuccessModal = ({ onClose }) => (
         </p>
         <button
           onClick={onClose}
-          className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+          className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300"
         >
           Continue to Login
         </button>
@@ -51,30 +51,29 @@ const PersonalInfoStep = ({
   isCheckingEmail,
 }) => (
   <>
-    <div className="text-center mb-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">Create Account</h1>
-      <p className="text-gray-600">Step 1: Personal Information</p>
+    <div className="text-center mb-6">
+      <h1 className="text-2xl font-bold text-gray-800 mb-2">Create Account</h1>
+      <p className="text-gray-600 text-sm">Step 1: Personal Information</p>
     </div>
 
-    <form onSubmit={handleNext}>
-      <div className="mb-4">
+    <form onSubmit={handleNext} className="space-y-4">
+      <div>
         <label
           htmlFor="role"
-          className="block text-sm font-medium text-gray-700 -mb-3"
+          className="block text-sm font-medium text-gray-700 mb-2"
         >
           Choose user Type
         </label>
-        <br />
         <select
           name="role"
           id="role"
-          className={`w-full px-4 py-3 rounded-lg border  ${
+          className={`w-full px-3 py-2.5 rounded-lg border ${
             errors.role
               ? "border-red-500 focus:ring-red-500"
-              : "border-gray-300 focus:ring-blue-500"
+              : "border-gray-300 focus:ring-gray-500"
           } focus:outline-none focus:ring-2 transition-colors`}
-           value={formData.role}
-           onChange={handleChange}
+          value={formData.role}
+          onChange={handleChange}
         >
           <option value="">Select Role</option>
           <option value="BUYER">Buyer</option>
@@ -83,6 +82,9 @@ const PersonalInfoStep = ({
         {errors.role && (
           <p className="mt-1 text-sm text-red-600">{errors.role}</p>
         )}
+      </div>
+
+      <div>
         <label
           htmlFor="fullName"
           className="block text-sm font-medium text-gray-700 mb-2"
@@ -95,10 +97,10 @@ const PersonalInfoStep = ({
           name="fullName"
           value={formData.fullName}
           onChange={handleChange}
-          className={`w-full px-4 py-3 rounded-lg border ${
+          className={`w-full px-3 py-2.5 rounded-lg border ${
             errors.fullName
               ? "border-red-500 focus:ring-red-500"
-              : "border-gray-300 focus:ring-blue-500"
+              : "border-gray-300 focus:ring-gray-500"
           } focus:outline-none focus:ring-2 transition-colors`}
           placeholder="John Doe"
         />
@@ -107,7 +109,7 @@ const PersonalInfoStep = ({
         )}
       </div>
 
-      <div className="mb-4">
+      <div>
         <label
           htmlFor="email"
           className="block text-sm font-medium text-gray-700 mb-2"
@@ -122,10 +124,10 @@ const PersonalInfoStep = ({
             value={formData.email}
             onChange={handleChange}
             onBlur={handleEmailBlur}
-            className={`w-full px-4 py-3 rounded-lg border ${
+            className={`w-full px-3 py-2.5 rounded-lg border ${
               errors.email
                 ? "border-red-500 focus:ring-red-500"
-                : "border-gray-300 focus:ring-blue-500"
+                : "border-gray-300 focus:ring-gray-500"
             } ${
               isCheckingEmail ? "pr-10" : ""
             } focus:outline-none focus:ring-2 transition-colors`}
@@ -134,7 +136,7 @@ const PersonalInfoStep = ({
           />
           {isCheckingEmail && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-500"></div>
             </div>
           )}
         </div>
@@ -146,7 +148,7 @@ const PersonalInfoStep = ({
         )}
       </div>
 
-      <div className="mb-6">
+      <div>
         <label
           htmlFor="phoneNumber"
           className="block text-sm font-medium text-gray-700 mb-2"
@@ -159,10 +161,10 @@ const PersonalInfoStep = ({
           name="phoneNumber"
           value={formData.phoneNumber}
           onChange={handleChange}
-          className={`w-full px-4 py-3 rounded-lg border ${
+          className={`w-full px-3 py-2.5 rounded-lg border ${
             errors.phoneNumber
               ? "border-red-500 focus:ring-red-500"
-              : "border-gray-300 focus:ring-blue-500"
+              : "border-gray-300 focus:ring-gray-500"
           } focus:outline-none focus:ring-2 transition-colors`}
           placeholder="1234567890"
         />
@@ -173,18 +175,18 @@ const PersonalInfoStep = ({
 
       <button
         type="submit"
-        className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+        className="w-full py-2.5 px-4 rounded-lg bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 mt-2"
       >
         Next
       </button>
     </form>
 
-    <div className="mt-6 text-center">
+    <div className="mt-4 text-center">
       <p className="text-sm text-gray-600">
         Already have an account?{" "}
         <Link
           to="/login"
-          className="font-medium text-blue-600 hover:text-blue-500"
+          className="font-medium text-gray-600 hover:text-gray-500"
         >
           Login
         </Link>
@@ -205,13 +207,13 @@ const PasswordStep = ({
   isSubmitting,
 }) => (
   <>
-    <div className="text-center mb-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-2">Create Account</h1>
-      <p className="text-gray-600">Step 2: Password Setup</p>
+    <div className="text-center mb-6">
+      <h1 className="text-2xl font-bold text-gray-800 mb-2">Create Account</h1>
+      <p className="text-gray-600 text-sm">Step 2: Password Setup</p>
     </div>
 
-    <form onSubmit={handleSubmit}>
-      <div className="mb-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
         <label
           htmlFor="password"
           className="block text-sm font-medium text-gray-700 mb-2"
@@ -225,10 +227,10 @@ const PasswordStep = ({
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className={`w-full px-4 py-3 rounded-lg border ${
+            className={`w-full px-3 py-2.5 rounded-lg border ${
               errors.password
                 ? "border-red-500 focus:ring-red-500"
-                : "border-gray-300 focus:ring-blue-500"
+                : "border-gray-300 focus:ring-gray-500"
             } focus:outline-none focus:ring-2 transition-colors pr-12`}
             placeholder="••••••••"
           />
@@ -238,9 +240,9 @@ const PasswordStep = ({
             onClick={() => togglePasswordVisibility("password")}
           >
             {showPassword.password ? (
-              <EyeSlashIcon className="h-5 w-5" />
+              <EyeSlashIcon className="h-4 w-4" />
             ) : (
-              <EyeIcon className="h-5 w-5" />
+              <EyeIcon className="h-4 w-4" />
             )}
           </button>
         </div>
@@ -249,7 +251,7 @@ const PasswordStep = ({
         )}
       </div>
 
-      <div className="mb-6">
+      <div>
         <label
           htmlFor="confirmPassword"
           className="block text-sm font-medium text-gray-700 mb-2"
@@ -263,10 +265,10 @@ const PasswordStep = ({
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
-            className={`w-full px-4 py-3 rounded-lg border ${
+            className={`w-full px-3 py-2.5 rounded-lg border ${
               errors.confirmPassword
                 ? "border-red-500 focus:ring-red-500"
-                : "border-gray-300 focus:ring-blue-500"
+                : "border-gray-300 focus:ring-gray-500"
             } focus:outline-none focus:ring-2 transition-colors pr-12`}
             placeholder="••••••••"
           />
@@ -276,9 +278,9 @@ const PasswordStep = ({
             onClick={() => togglePasswordVisibility("confirmPassword")}
           >
             {showPassword.confirmPassword ? (
-              <EyeSlashIcon className="h-5 w-5" />
+              <EyeSlashIcon className="h-4 w-4" />
             ) : (
-              <EyeIcon className="h-5 w-5" />
+              <EyeIcon className="h-4 w-4" />
             )}
           </button>
         </div>
@@ -287,25 +289,25 @@ const PasswordStep = ({
         )}
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex gap-3 pt-2">
         <button
           type="button"
           onClick={handleBack}
-          className="flex-1 py-3 px-4 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+          className="flex-1 py-2.5 px-4 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors"
         >
           Back
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`flex-1 py-3 px-4 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center ${
+          className={`flex-1 py-2.5 px-4 rounded-lg bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center ${
             isSubmitting ? "opacity-75 cursor-not-allowed" : ""
           }`}
         >
           {isSubmitting ? (
             <>
               <svg
-                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -496,36 +498,171 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="h-3/4 bg-gradient-to-br flex items-center justify-center p-3 mt-6">
-      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md transition-all duration-500 ease-in-out relative">
-        {errors.formError && (
-          <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-lg">
-            {errors.formError}
-          </div>
-        )}
+    <div className="flex overflow-hidden mt-10  rounded-2xl shadow-lg max-w-6xl mx-auto h-[593px]">
+        {/* Left Side - Branding */}
+        <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-900 via-black to-gray-800 p-8 flex-col justify-between relative overflow-hidden">
+          <div className="absolute inset-0 bg-white opacity-5"></div>
+          <div className="absolute top-0 right-0 w-80 h-80 bg-white opacity-10 rounded-full -mr-40 -mt-40"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-white opacity-10 rounded-full -ml-40 -mb-40"></div>
 
-        {step === 1 ? (
-          <PersonalInfoStep
-            formData={formData}
-            errors={errors}
-            handleChange={handleChange}
-            handleNext={handleNext}
-            handleEmailBlur={handleEmailBlur}
-            isCheckingEmail={isCheckingEmail}
-          />
-        ) : (
-          <PasswordStep
-            formData={formData}
-            errors={errors}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-            showPassword={showPassword}
-            togglePasswordVisibility={togglePasswordVisibility}
-            handleBack={handleBack}
-            isSubmitting={isSubmitting}
-          />
-        )}
-      </div>
+          <div className="relative z-10">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                <svg
+                  className="w-6 h-6 text-gray-900"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+              </div>
+              <span className="text-white text-xl font-bold">ShopMind</span>
+            </div>
+          </div>
+
+          <div className="relative z-10 text-white">
+            <h2 className="text-2xl font-bold mb-4">Join ShopMind Today</h2>
+            <p className="text-gray-300 mb-6">
+              Create your account and start your journey with our comprehensive
+              e-commerce platform.
+            </p>
+            <div className="space-y-3">
+              <div className="flex items-start space-x-3">
+                <svg
+                  className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <div>
+                  <h3 className="font-semibold">Secure Platform</h3>
+                  <p className="text-gray-400 text-sm">
+                    Your data is protected with enterprise-grade security
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <svg
+                  className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <div>
+                  <h3 className="font-semibold">Easy Management</h3>
+                  <p className="text-gray-400 text-sm">
+                    Intuitive interface for seamless experience
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <svg
+                  className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <div>
+                  <h3 className="font-semibold">24/7 Support</h3>
+                  <p className="text-gray-400 text-sm">
+                    Our team is always here to help you
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative z-10 text-gray-400 text-xs">
+            © 2024 ShopMind. All rights reserved.
+          </div>
+        </div>
+
+        {/* Right Side - Registration Form */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
+          <div className="w-full max-w-sm">
+            {/* Mobile Logo */}
+            <div className="lg:hidden mb-6 text-center">
+              <div className="inline-flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-gray-900 to-black rounded-lg flex items-center justify-center">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                </div>
+                <span className="text-gray-800 text-lg font-bold">
+                  ShopMind
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl">
+              {errors.formError && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+                  {errors.formError}
+                </div>
+              )}
+
+              {step === 1 ? (
+                <PersonalInfoStep
+                  formData={formData}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleNext={handleNext}
+                  handleEmailBlur={handleEmailBlur}
+                  isCheckingEmail={isCheckingEmail}
+                />
+              ) : (
+                <PasswordStep
+                  formData={formData}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleSubmit={handleSubmit}
+                  showPassword={showPassword}
+                  togglePasswordVisibility={togglePasswordVisibility}
+                  handleBack={handleBack}
+                  isSubmitting={isSubmitting}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      
 
       {showSuccessModal && <SuccessModal onClose={closeSuccessModal} />}
     </div>
