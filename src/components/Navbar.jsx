@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useCart } from "../contexts/CartContext";
 import { logout as authLogout } from "../api/auth";
-import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 const Navbar = () => {
@@ -15,11 +14,7 @@ const Navbar = () => {
     logout();
     setTimeout(() => navigate("/"), 0); // defer navigation to next tick
   };
-
-  useEffect(() => {
-    if (!user) navigate("/");
-  }, [user, navigate]);
-
+  
   return (
     <nav className="bg-gray-100 p-4 text-black flex gap-30">
       <h1 className="font-bold text-4xl">ShopMind</h1>

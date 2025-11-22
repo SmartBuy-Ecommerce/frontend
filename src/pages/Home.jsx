@@ -61,8 +61,10 @@ export default function Home() {
               ) : (
                 <Link
                   to="/login"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105"
-                >
+                  className="bg-black text-white font-bold py-3 px-8 rounded-lg 
+             border border-transparent
+             transition duration-300 transform hover:scale-105
+             hover:bg-white hover:border-black hover:text-black"                >
                   Shop Now
                 </Link>
               )}
@@ -77,7 +79,7 @@ export default function Home() {
               ) : (
                 <Link
                   to="/aboutus"
-                  className="border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 font-bold py-3 px-8 rounded-lg transition duration-300"
+                  className="border-2 border-gray-300 hover:border-black text-gray-700 hover:text-black font-bold py-3 px-8 rounded-lg transition duration-300"
                 >
                   Learn More
                 </Link>
@@ -357,7 +359,9 @@ export default function Home() {
             ) : (
               <Link
                 to="/login"
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition duration-300"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black  transition duration-300  transform hover:scale-105
+                  hover:bg-white hover:border-black hover:text-black 
+                "
               >
                 View All Products
                 <svg
